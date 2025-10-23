@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/* Global page background and typography */
+html,
+body,
+#__next {
+  height: 100%;
+}
+
+body {
+  background-color: #030303; /* base black */
+  color: #e6eef8; /* approximate tailwind text-slate-100 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* Offset content for fixed header incl. safe-area */
+body {
+  padding-top: calc(var(--header-h) + env(safe-area-inset-top));
+}
+
+/* Smooth anchor scrolling for in-page nav */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Header slide-down animation */
+@keyframes slide-down {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.animate-slide-down {
+  animation: slide-down 0.5s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-down {
+    animation: none;
+  }
+}
+
+/* Small SVG stroke animations used across sections */
+.animate-draw {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: draw 2s forwards ease-out;
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.stroke-flow {
+  stroke-dasharray: 12 8;
+  animation: flow 6s linear infinite;
+}
+@keyframes flow {
+  to {
+    stroke-dashoffset: -200;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-draw,
+  .stroke-flow {
+    animation: none !important;
+  }
+}
+
+/* Viewport section sizing: one section per screen accounting for sticky header */
+:root {
+  --header-h: 64px; /* base */
+}
+@media (min-width: 768px) {
+  :root {
+    --header-h: 72px; /* md */
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 80px; /* lg */
+  }
+}
+
+/* Ensure anchor jumps don't hide content under sticky header */
+section[id] {
+  scroll-margin-top: var(--header-h);
+}

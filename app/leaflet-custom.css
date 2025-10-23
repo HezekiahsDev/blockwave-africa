@@ -1,0 +1,42 @@
+/* Leaflet Map Custom Styles */
+
+/* Override default leaflet container styles */
+.leaflet-container {
+  background: transparent !important;
+  font-family: inherit;
+}
+
+/* Hide default attribution */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+/* Custom tooltip styling */
+.hub-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-tooltip-left::before,
+.leaflet-tooltip-right::before,
+.leaflet-tooltip-top::before,
+.leaflet-tooltip-bottom::before {
+  border: none !important;
+}
+
+/* Ensure map tiles load properly */
+.leaflet-tile-container img {
+  opacity: 0.7;
+}
+
+/* Custom marker container */
+.custom-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Smooth transitions */
+.leaflet-zoom-animated {
+  will-change: transform;
+}
