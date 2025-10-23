@@ -86,7 +86,9 @@ export default function Footer(): JSX.Element {
             <div className="mt-6 flex gap-3">
               {/* Replace hrefs with real links */}
               <a
-                href="#"
+                href="https://x.com/BlockWaveAfrica"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Twitter"
                 className="p-2 rounded-md ring-1 ring-green-700/20 hover:bg-white/2"
               >
