@@ -1042,16 +1042,48 @@ const LeafletAfricaMap = React.memo(
 
       .connection-line {
         stroke: url(#connectionGradient);
-        stroke-width: 3.5;
+        stroke-width: 2;
         stroke-dasharray: 8 6;
         animation: dash 20s linear infinite;
-        opacity: 0.5;
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      /* Make lines more visible on larger screens */
+      @media (min-width: 768px) {
+        .connection-line {
+          stroke-width: 2.5;
+          opacity: 0.65;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .connection-line {
+          stroke-width: 3;
+          opacity: 0.7;
+        }
+      }
+
+      @media (min-width: 1536px) {
+        .connection-line {
+          stroke-width: 3.5;
+          opacity: 0.75;
+        }
       }
 
       @keyframes dash {
         to {
           stroke-dashoffset: -100;
         }
+      }
+
+      /* Ensure SVG overlay is properly layered */
+      .leaflet-overlay-pane {
+        z-index: 400 !important;
+      }
+
+      .leaflet-marker-pane {
+        z-index: 600 !important;
       }
 
       .leaflet-container {
@@ -1375,6 +1407,13 @@ const LeafletAfricaMap = React.memo(
 
         const svg = document.querySelector(".leaflet-overlay-pane svg");
         if (svg) {
+          // Ensure SVG has proper attributes for visibility
+          svg.setAttribute(
+            "style",
+            "position: absolute; pointer-events: none;"
+          );
+          svg.setAttribute("class", "connection-lines-svg");
+
           // Add gradient definition
           const defs = document.createElementNS(
             "http://www.w3.org/2000/svg",
@@ -1386,16 +1425,23 @@ const LeafletAfricaMap = React.memo(
           );
           gradient.setAttribute("id", "connectionGradient");
           gradient.innerHTML = `
-        <stop offset="0%" stop-color="#22c55e" stop-opacity="0.6"/>
-        <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.4"/>
-        <stop offset="100%" stop-color="#22c55e" stop-opacity="0.6"/>
+        <stop offset="0%" stop-color="#22c55e" stop-opacity="0.8"/>
+        <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="#22c55e" stop-opacity="0.8"/>
       `;
           defs.appendChild(gradient);
           svg.appendChild(defs);
 
+          // Draw connection lines
+          let linesCreated = 0;
           connections.forEach(([startIdx, endIdx]) => {
             const start = memoizedTechHubs[startIdx];
             const end = memoizedTechHubs[endIdx];
+
+            if (!start || !end) {
+              console.warn(`Invalid connection: ${startIdx} -> ${endIdx}`);
+              return;
+            }
 
             const startPoint = map.latLngToLayerPoint([start.lat, start.lng]);
             const endPoint = map.latLngToLayerPoint([end.lat, end.lng]);
@@ -1409,8 +1455,11 @@ const LeafletAfricaMap = React.memo(
             line.setAttribute("x2", endPoint.x.toString());
             line.setAttribute("y2", endPoint.y.toString());
             line.setAttribute("class", "connection-line");
+            line.setAttribute("stroke", "url(#connectionGradient)");
+            line.setAttribute("stroke-width", "2.5");
 
             svg.appendChild(line);
+            linesCreated++;
 
             // Update line positions on zoom/pan
             map.on("zoom move", () => {
@@ -1422,6 +1471,10 @@ const LeafletAfricaMap = React.memo(
               line.setAttribute("y2", newEnd.y.toString());
             });
           });
+
+          console.log(`Created ${linesCreated} connection lines on map`);
+        } else {
+          console.warn("Could not find SVG element for connection lines");
         }
 
         // Cleanup
