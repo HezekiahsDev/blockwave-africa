@@ -8,16 +8,19 @@ export default function Team() {
       name: "XENONTHEKING",
       role: "Founder",
       desc: "Provides vision and strategic leadership for the project.",
+      xAccount: "https://x.com/Double_Elevenn1",
     },
     {
       name: "EmmybabsDeVav",
       role: "Co-founder",
       desc: "Builds partnerships and alliances across the ecosystem",
+      xAccount: "https://x.com/emmybabsdevav",
     },
     {
       name: "Hezekiahs",
       role: "Dev Lead",
       desc: "Leads the development efforts and technical direction.",
+      xAccount: "https://x.com/HezekiahsDev",
     },
   ];
 
@@ -223,9 +226,11 @@ export default function Team() {
                   <div className="mt-auto w-full">
                     <a
                       className="inline-flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-500 text-black rounded-md font-medium"
-                      href="#contact"
+                      href={p.xAccount}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      Message
+                      Connect
                     </a>
                   </div>
                 </li>
