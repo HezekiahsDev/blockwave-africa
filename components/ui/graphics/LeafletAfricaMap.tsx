@@ -1040,34 +1040,58 @@ const LeafletAfricaMap = React.memo(
 
       /* Removed heavy outer wave rings and keyframes to improve performance */
 
+      /* Connection lines styling */
       .connection-line {
         stroke: url(#connectionGradient);
-        stroke-width: 2;
+        stroke-width: 2.5;
         stroke-dasharray: 8 6;
         animation: dash 20s linear infinite;
-        opacity: 0.6;
+        opacity: 0.7;
         pointer-events: none;
+        fill: none;
+      }
+
+      /* Fallback if gradient doesn't work */
+      svg line {
+        stroke: #22c55e;
+        stroke-width: 2.5;
+        stroke-dasharray: 8 6;
+        opacity: 0.7;
+        fill: none;
+      }
+
+      .connection-lines-group line {
+        stroke: url(#connectionGradient);
+        stroke-width: 2.5;
+        stroke-dasharray: 8 6;
+        animation: dash 20s linear infinite;
+        opacity: 0.7;
+        pointer-events: none;
+        fill: none;
       }
 
       /* Make lines more visible on larger screens */
       @media (min-width: 768px) {
-        .connection-line {
-          stroke-width: 2.5;
-          opacity: 0.65;
+        .connection-line,
+        .connection-lines-group line {
+          stroke-width: 3;
+          opacity: 0.75;
         }
       }
 
       @media (min-width: 1024px) {
-        .connection-line {
-          stroke-width: 3;
-          opacity: 0.7;
+        .connection-line,
+        .connection-lines-group line {
+          stroke-width: 3.5;
+          opacity: 0.8;
         }
       }
 
       @media (min-width: 1536px) {
-        .connection-line {
-          stroke-width: 3.5;
-          opacity: 0.75;
+        .connection-line,
+        .connection-lines-group line {
+          stroke-width: 4;
+          opacity: 0.85;
         }
       }
 
@@ -1080,6 +1104,13 @@ const LeafletAfricaMap = React.memo(
       /* Ensure SVG overlay is properly layered */
       .leaflet-overlay-pane {
         z-index: 400 !important;
+      }
+
+      .leaflet-overlay-pane svg {
+        position: absolute !important;
+        pointer-events: none !important;
+        width: 100% !important;
+        height: 100% !important;
       }
 
       .leaflet-marker-pane {
@@ -1401,81 +1432,120 @@ const LeafletAfricaMap = React.memo(
           [13, 51], // Omdurman - Addis Ababa (Sudan to Ethiopia)
         ];
 
-        // Create SVG overlay for connection lines
-        const svgOverlay = L.svg({ pane: "overlayPane" });
-        svgOverlay.addTo(map);
+        // Create SVG overlay for connection lines with a slight delay to ensure map is ready
+        setTimeout(() => {
+          // Get or create the SVG element in the overlay pane
+          let svg = map.getPane("overlayPane")?.querySelector("svg");
 
-        const svg = document.querySelector(".leaflet-overlay-pane svg");
-        if (svg) {
-          // Ensure SVG has proper attributes for visibility
-          svg.setAttribute(
-            "style",
-            "position: absolute; pointer-events: none;"
-          );
-          svg.setAttribute("class", "connection-lines-svg");
-
-          // Add gradient definition
-          const defs = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "defs"
-          );
-          const gradient = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "linearGradient"
-          );
-          gradient.setAttribute("id", "connectionGradient");
-          gradient.innerHTML = `
-        <stop offset="0%" stop-color="#22c55e" stop-opacity="0.8"/>
-        <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.6"/>
-        <stop offset="100%" stop-color="#22c55e" stop-opacity="0.8"/>
-      `;
-          defs.appendChild(gradient);
-          svg.appendChild(defs);
-
-          // Draw connection lines
-          let linesCreated = 0;
-          connections.forEach(([startIdx, endIdx]) => {
-            const start = memoizedTechHubs[startIdx];
-            const end = memoizedTechHubs[endIdx];
-
-            if (!start || !end) {
-              console.warn(`Invalid connection: ${startIdx} -> ${endIdx}`);
-              return;
+          if (!svg) {
+            // If SVG doesn't exist, create it manually
+            svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("class", "leaflet-zoom-animated");
+            svg.style.position = "absolute";
+            svg.style.pointerEvents = "none";
+            svg.style.zIndex = "400";
+            const overlayPane = map.getPane("overlayPane");
+            if (overlayPane) {
+              overlayPane.appendChild(svg);
             }
+          }
 
-            const startPoint = map.latLngToLayerPoint([start.lat, start.lng]);
-            const endPoint = map.latLngToLayerPoint([end.lat, end.lng]);
-
-            const line = document.createElementNS(
-              "http://www.w3.org/2000/svg",
-              "line"
+          if (svg) {
+            console.log(
+              "SVG element found/created, adding connection lines..."
             );
-            line.setAttribute("x1", startPoint.x.toString());
-            line.setAttribute("y1", startPoint.y.toString());
-            line.setAttribute("x2", endPoint.x.toString());
-            line.setAttribute("y2", endPoint.y.toString());
-            line.setAttribute("class", "connection-line");
-            line.setAttribute("stroke", "url(#connectionGradient)");
-            line.setAttribute("stroke-width", "2.5");
 
-            svg.appendChild(line);
-            linesCreated++;
+            // Add gradient definition
+            const defs = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "defs"
+            );
+            const gradient = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "linearGradient"
+            );
+            gradient.setAttribute("id", "connectionGradient");
+            gradient.innerHTML = `
+              <stop offset="0%" stop-color="#22c55e" stop-opacity="0.9"/>
+              <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#22c55e" stop-opacity="0.9"/>
+            `;
+            defs.appendChild(gradient);
+            svg.appendChild(defs);
+
+            // Create a group for all connection lines
+            const linesGroup = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "g"
+            );
+            linesGroup.setAttribute("class", "connection-lines-group");
+            svg.appendChild(linesGroup);
+
+            // Draw connection lines
+            let linesCreated = 0;
+            const lineElements: SVGLineElement[] = [];
+
+            connections.forEach(([startIdx, endIdx]) => {
+              const start = memoizedTechHubs[startIdx];
+              const end = memoizedTechHubs[endIdx];
+
+              if (!start || !end) {
+                console.warn(`Invalid connection: ${startIdx} -> ${endIdx}`);
+                return;
+              }
+
+              const startPoint = map.latLngToLayerPoint([start.lat, start.lng]);
+              const endPoint = map.latLngToLayerPoint([end.lat, end.lng]);
+
+              const line = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "line"
+              );
+              line.setAttribute("x1", startPoint.x.toString());
+              line.setAttribute("y1", startPoint.y.toString());
+              line.setAttribute("x2", endPoint.x.toString());
+              line.setAttribute("y2", endPoint.y.toString());
+              line.setAttribute("class", "connection-line");
+              line.setAttribute("stroke", "url(#connectionGradient)");
+              line.setAttribute("stroke-width", "3");
+              line.setAttribute("stroke-dasharray", "8 6");
+              line.setAttribute("opacity", "0.7");
+
+              linesGroup.appendChild(line);
+              lineElements.push(line);
+              linesCreated++;
+            });
+
+            console.log(`✅ Created ${linesCreated} connection lines on map`);
 
             // Update line positions on zoom/pan
-            map.on("zoom move", () => {
-              const newStart = map.latLngToLayerPoint([start.lat, start.lng]);
-              const newEnd = map.latLngToLayerPoint([end.lat, end.lng]);
-              line.setAttribute("x1", newStart.x.toString());
-              line.setAttribute("y1", newStart.y.toString());
-              line.setAttribute("x2", newEnd.x.toString());
-              line.setAttribute("y2", newEnd.y.toString());
-            });
-          });
+            const updateLines = () => {
+              lineElements.forEach((line, idx) => {
+                const [startIdx, endIdx] = connections[idx];
+                const start = memoizedTechHubs[startIdx];
+                const end = memoizedTechHubs[endIdx];
 
-          console.log(`Created ${linesCreated} connection lines on map`);
-        } else {
-          console.warn("Could not find SVG element for connection lines");
-        }
+                if (start && end) {
+                  const newStart = map.latLngToLayerPoint([
+                    start.lat,
+                    start.lng,
+                  ]);
+                  const newEnd = map.latLngToLayerPoint([end.lat, end.lng]);
+                  line.setAttribute("x1", newStart.x.toString());
+                  line.setAttribute("y1", newStart.y.toString());
+                  line.setAttribute("x2", newEnd.x.toString());
+                  line.setAttribute("y2", newEnd.y.toString());
+                }
+              });
+            };
+
+            map.on("zoom move viewreset", updateLines);
+          } else {
+            console.error(
+              "❌ Could not find or create SVG element for connection lines"
+            );
+          }
+        }, 200);
 
         // Cleanup
         return () => {
