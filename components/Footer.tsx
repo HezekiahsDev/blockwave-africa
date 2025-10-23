@@ -230,7 +230,7 @@ export default function Footer(): JSX.Element {
 
         <div className="mt-10 border-t border-green-800/8 pt-6 text-sm text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
-            © {new Date().getFullYear()} Blockwave. All rights reserved.
+            © {new Date().getFullYear()} Blockwave Africa. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
             <Link href="/privacy" className="hover:text-white">

@@ -9,13 +9,49 @@ body,
 
 body {
   background-color: #030303; /* base black */
+  background-image: 
+    /* Animated diagonal lines */ repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 100px,
+      rgba(148, 163, 184, 0.03) 100px,
+      rgba(148, 163, 184, 0.03) 101px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 100px,
+      rgba(148, 163, 184, 0.02) 100px,
+      rgba(148, 163, 184, 0.02) 101px
+    );
+  background-size: 200% 200%;
+  animation: backgroundShift 20s ease-in-out infinite;
   color: #e6eef8; /* approximate tailwind text-slate-100 */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Background animation keyframes */
+@keyframes backgroundShift {
+  0%,
+  100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+}
 /* Offset content for fixed header incl. safe-area */
 body {
   padding-top: calc(var(--header-h) + env(safe-area-inset-top));
+}
+
+/* Respect reduced motion preferences for background animation */
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none !important;
+    background-position: 0% 0%;
+  }
 }
 
 /* Smooth anchor scrolling for in-page nav */
