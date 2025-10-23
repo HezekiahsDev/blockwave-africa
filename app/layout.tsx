@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -16,14 +16,18 @@ export const metadata: Metadata = {
     "blockchain workshops",
     "Blockwave",
   ],
-  viewport: "width=device-width, initial-scale=1",
-  themeColor: "#0f172a",
   openGraph: {
     title: "Blockwave Africa — Ride the Future",
     description:
       "Empowering Africans to build, learn and lead in the blockchain economy.",
     type: "website",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0f172a",
 };
 
 const inter = Inter({
