@@ -1,26 +1,30 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 export default function Team() {
   const people = [
     {
-      name: "XENONTHEKING",
+      name: "Isaac J Chiroma",
       role: "Founder",
       desc: "Provides vision and strategic leadership for the project.",
       xAccount: "https://x.com/Double_Elevenn1",
+      image: "/assets/team/isaac-j-chiroma.png",
     },
     {
-      name: "EmmybabsDeVav",
+      name: "Emmanuel Babade",
       role: "Co-founder",
       desc: "Builds partnerships and alliances across the ecosystem",
       xAccount: "https://x.com/emmybabsdevav",
+      image: null,
     },
     {
-      name: "Hezekiahs",
+      name: "Hezekiah Olushola",
       role: "Dev Lead",
       desc: "Leads the development efforts and technical direction.",
       xAccount: "https://x.com/HezekiahsDev",
+      image: "/assets/team/heze.png",
     },
   ];
 
@@ -59,7 +63,6 @@ export default function Team() {
                 fill="url(#tg1)"
                 opacity="0.08"
               />
-
               {/* floating abstract blobs */}
               <g className="blobs" fill="url(#tg1)" opacity="0.15">
                 <ellipse cx="140" cy="120" rx="88" ry="48" />
@@ -206,11 +209,20 @@ export default function Team() {
                   key={p.name}
                   className="bg-black/30 border border-green-800/10 rounded-2xl p-6 flex flex-col items-center gap-4 text-center"
                 >
-                  <div className="w-16 h-16 rounded-lg bg-linear-to-br from-green-600/10 to-teal-500/6 flex items-center justify-center overflow-hidden">
-                    {/* Placeholder image */}
-                    <div className="w-12 h-12 rounded-full bg-green-700/20 flex items-center justify-center text-green-300 font-bold">
-                      {p.name.slice(0, 1)}
-                    </div>
+                  <div className="w-24 h-24 rounded-full bg-linear-to-br from-green-600/10 to-teal-500/6 flex items-center justify-center overflow-hidden ring-2 ring-green-600/30">
+                    {p.image ? (
+                      <Image
+                        src={p.image}
+                        alt={`${p.name} profile picture`}
+                        width={96}
+                        height={96}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full rounded-full bg-green-700/20 flex items-center justify-center text-green-300 font-bold text-2xl">
+                        {p.name.slice(0, 1)}
+                      </div>
+                    )}
                   </div>
 
                   <div>
