@@ -12,7 +12,7 @@ export default function Mission() {
         Our mission
       </h3>
       <h4 className="text-2xl md:text-3xl font-extrabold mt-3 mb-4">
-        Empower • Connect • Build
+        Educate. Innovate. Empower
       </h4>
 
       <p className="text-slate-300 leading-relaxed mb-6">
@@ -24,27 +24,28 @@ export default function Mission() {
       {/* Value grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div className="p-4 rounded-lg bg-black/30 border border-green-800/10">
-          <div className="font-semibold">Education</div>
+          <div className="font-semibold">Educate</div>
           <div className="text-sm text-slate-300">
             Hands-on curricula that scale from beginners to builders.
           </div>
         </div>
         <div className="p-4 rounded-lg bg-black/30 border border-green-800/10">
-          <div className="font-semibold">Networking</div>
+          <div className="font-semibold">Innovate</div>
           <div className="text-sm text-slate-300">
-            Bridges between local talent and global opportunity.
+            Support breakthrough ideas and projects solving real African
+            challenges.
           </div>
         </div>
         <div className="p-4 rounded-lg bg-black/30 border border-green-800/10">
-          <div className="font-semibold">Incubation</div>
+          <div className="font-semibold">Empower</div>
           <div className="text-sm text-slate-300">
-            Support for early projects and founders.
+            Build bridges between local talent and global opportunities.
           </div>
         </div>
         <div className="p-4 rounded-lg bg-black/30 border border-green-800/10">
-          <div className="font-semibold">Events</div>
+          <div className="font-semibold">Connect</div>
           <div className="text-sm text-slate-300">
-            From grassroots meetups to major summits.
+            From grassroots meetups to major summits across the continent.
           </div>
         </div>
       </div>
