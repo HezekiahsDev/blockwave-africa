@@ -17,8 +17,8 @@ export default function Mission() {
 
       <p className="text-slate-300 leading-relaxed mb-6">
         We host workshops, launch online learning tracks, build partnerships,
-        and support projects solving real problems across Africa. From Kano to
-        Nairobi — we help local ideas become global protocols.
+        and support projects solving real problems across Africa, helping local
+        ideas become global protocols.
       </p>
 
       {/* Value grid */}
