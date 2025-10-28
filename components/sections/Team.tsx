@@ -17,7 +17,7 @@ export default function Team() {
       role: "Co-founder",
       desc: "Builds partnerships and alliances across the ecosystem",
       xAccount: "https://x.com/emmybabsdevav",
-      image: null,
+      image: "/assets/team/emmybabs.png",
     },
     {
       name: "Hezekiah Olushola",
